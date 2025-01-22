@@ -67,7 +67,7 @@ const FloatingImage = () => {
                   onMouseLeave={handleMouseLeave}
                   onMouseUp={handleMouseLeave}
                   onMouseEnter={handleMouseLeave}
-                  src="/img/entrance.webp"
+                  src="/img/cyber.webp"
                   alt="entrance.webp"
                   className="object-contain"
                 />
@@ -114,7 +114,7 @@ const FloatingImage = () => {
             <Button
               id="realm-btn"
               title="discover dogeai"
-              containerClass="mt-5"
+              containerClass="mt-5 bg-purple-700 text-white"
             />
           </div>
         </div>

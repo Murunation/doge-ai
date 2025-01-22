@@ -6,7 +6,7 @@ import { TiLocationArrow } from "react-icons/ti";
 
 import Button from "./Button";
 
-const navItems = ["Nexus", "Vault", "Prologue", "About", "Contact"];
+const navItems = ["About", "Contact"];
 
 const NavBar = () => {
   // State for toggling audio and visual indicator
@@ -82,7 +82,7 @@ const NavBar = () => {
           </div>
 
           {/* Navigation Links and Audio Button */}
-          <div className="flex h-full items-center">
+          <div className="flex h-full items-center text-white font-bold">
             <div className="hidden md:block">
               {navItems.map((item, index) => (
                 <a
