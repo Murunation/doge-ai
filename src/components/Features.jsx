@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { TiLocationArrow } from "react-icons/ti";
 
 export const BentoTilt = ({ children, className = "" }) => {
@@ -41,7 +41,35 @@ export const BentoTilt = ({ children, className = "" }) => {
 export const BentoCard = ({ src, title, description, isComingSoon }) => {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [hoverOpacity, setHoverOpacity] = useState(0);
+  const [isVideoVisible, setIsVideoVisible] = useState(false);
+  const videoRef = useRef(null);
   const hoverButtonRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVideoVisible(true);
+            if (videoRef.current) {
+              videoRef.current.play();
+            }
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    if (videoRef.current) {
+      observer.observe(videoRef.current);
+    }
+
+    return () => {
+      if (videoRef.current) {
+        observer.unobserve(videoRef.current);
+      }
+    };
+  }, []);
 
   const handleMouseMove = (event) => {
     if (!hoverButtonRef.current) return;
@@ -59,10 +87,12 @@ export const BentoCard = ({ src, title, description, isComingSoon }) => {
   return (
     <div className="relative size-full">
       <video
-        src={src}
+        ref={videoRef}
+        src={isVideoVisible ? src : undefined}
         loop
         muted
-        autoPlay
+        preload="none"
+        playsInline
         className="absolute left-0 top-0 size-full object-cover object-center"
       />
       <div className="relative z-10 flex size-full flex-col justify-between p-5 text-blue-50">
@@ -106,7 +136,7 @@ const Features = () => (
         Our Mission
         </p>
         <p className="max-w-md font-circular-web text-lg text-blue-50 opacity-50">
-        At DogeAI, we’re committed to making AI accessible, fun, and valuable for everyday users. Inspired by the Doge meme, we aim to bring joy and utility to everyone, from tech enthusiasts to casual users.
+        At DogeAI, we're committed to making AI accessible, fun, and valuable for everyday users. Inspired by the Doge meme, we aim to bring joy and utility to everyone, from tech enthusiasts to casual users.
         </p>
       </div>
 
@@ -174,17 +204,54 @@ const Features = () => (
         </BentoTilt>
 
         <BentoTilt className="bento-tilt_2">
-          <video
-            src="videos/feature-9.mp4"
-            loop
-            muted
-            autoPlay
-            className="size-full object-cover object-center"
-          />
+          <LazyVideo src="videos/feature-9.mp4" />
         </BentoTilt>
       </div>
     </div>
   </section>
 );
+
+const LazyVideo = ({ src }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            if (videoRef.current) {
+              videoRef.current.play();
+            }
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    if (videoRef.current) {
+      observer.observe(videoRef.current);
+    }
+
+    return () => {
+      if (videoRef.current) {
+        observer.unobserve(videoRef.current);
+      }
+    };
+  }, []);
+
+  return (
+    <video
+      ref={videoRef}
+      src={isVisible ? src : undefined}
+      loop
+      muted
+      preload="none"
+      playsInline
+      className="size-full object-cover object-center"
+    />
+  );
+};
 
 export default Features;
